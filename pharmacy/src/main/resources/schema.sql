@@ -1,0 +1,41 @@
+CREATE TABLE IF NOT EXISTS users (
+  id BIGINT AUTO_INCREMENT PRIMARY KEY,
+  name VARCHAR(255) NOT NULL,
+  email VARCHAR(255) NOT NULL UNIQUE,
+  phone_number VARCHAR(20),
+  password VARCHAR(255) NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS stores (
+  store_id BIGINT AUTO_INCREMENT PRIMARY KEY,
+  store_name VARCHAR(255) NOT NULL,
+  store_location VARCHAR(255),
+  user_id BIGINT NOT NULL,
+  FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+);
+
+CREATE TABLE IF NOT EXISTS medicines(
+  med_id BIGINT AUTO_INCREMENT PRIMARY KEY,
+  med_name VARCHAR(255) NOT NULL UNIQUE,
+  is_active BOOLEAN NOT NULL DEFAULT TRUE
+);
+
+CREATE TABLE IF NOT EXISTS batchs(
+  batch_id BIGINT AUTO_INCREMENT PRIMARY KEY,
+  man_date DATE NOT NULL,
+  exp_date DATE NOT NULL,
+  med_id BIGINT NOT NULL,
+  FOREIGN KEY(med_id) REFERENCES medicines(med_id)
+);
+
+CREATE TABLE IF NOT EXISTS stocks(
+  stock_id BIGINT AUTO_INCREMENT PRIMARY KEY,
+  batch_id BIGINT NOT NULL,
+  store_id BIGINT NOT NULL,
+  stocks_recieved INT NOT NULL,
+  stocks_out INT NOT NULL,
+  stocks_left INT NOT NULL,
+
+  FOREIGN KEY(batch_id) REFERENCES batchs(batch_id),
+  FOREIGN KEY(store_id) REFERENCES stores(store_id) ON DELETE CASCADE
+);
